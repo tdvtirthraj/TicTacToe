@@ -1,0 +1,68 @@
+class TicTacToe:
+    def __init__(self):
+        self.board = [' ' for _ in range(9)]
+        self.current = 'X'
+        self.moves = 0
+
+    def show_board(self):
+        # Display the current state of the board
+        for i in range(0, 9, 3):
+            row = ' | '.join(self.board[i:i+3])
+            print(f" {row} ")
+            if i < 6:
+                print("---|---|---")
+
+    def move(self, pos):
+        # Make a move if the cell is empty
+        if 0 <= pos < 9 and self.board[pos] == ' ':
+            self.board[pos] = self.current
+            self.moves += 1
+            return True
+        else:
+            print("Invalid move! Choose a free cell from 0 to 8.")
+            return False
+
+    def has_winner(self):
+        # Define all possible winning lineups
+        combos = [
+            (0,1,2), (3,4,5), (6,7,8),    # rows
+            (0,3,6), (1,4,7), (2,5,8),    # columns
+            (0,4,8), (2,4,6)              # diagonals
+        ]
+        for a, b, c in combos:
+            if self.board[a] == self.board[b] == self.board[c] != ' ':
+                print(f"{self.board[a]} wins the game!")
+                return True
+        return False
+
+    def is_draw(self):
+        return self.moves == 9 and not self.has_winner()
+
+    def switch_player(self):
+        self.current = 'O' if self.current == 'X' else 'X'
+
+    def play(self):
+        print("Welcome to Pythonic Tic Tac Toe!\nCells are numbered 0–8 as follows:")
+        print(" 0 | 1 | 2 \n---|---|---\n 3 | 4 | 5 \n---|---|---\n 6 | 7 | 8 \n")
+
+        while True:
+            self.show_board()
+            try:
+                pos = int(input(f"{self.current}'s turn. Enter a cell (0-8): "))
+            except ValueError:
+                print("Please enter a valid integer between 0 and 8.")
+                continue
+            if not self.move(pos):
+                continue
+            if self.has_winner():
+                self.show_board()
+                break
+            if self.is_draw():
+                print("It's a draw!")
+                self.show_board()
+                break
+            self.switch_player()
+
+if __name__ == "__main__":
+    game = TicTacToe()
+    game.play()
